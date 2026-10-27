@@ -4,7 +4,7 @@ echo "Git update"
 git pull origin main
 
 echo "CMake build"
-make clean
+rm -f hello hello.o
 make
 
 echo "Execution"
