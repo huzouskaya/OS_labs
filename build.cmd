@@ -1,12 +1,13 @@
 @echo off
 chcp 65001 > nul
 echo Git Update
-git pull origin lab2
+git pull origin lab2_meson
 
 echo Make
-del /Q test_runner.exe *.o 2>nul
-mingw32-make
+if exist build rmdir /S /Q build
+meson setup build
+meson compile -C build
 
 echo Execution
-test_runner.exe
+build\test_runner.exe
 pause 

@@ -1,11 +1,12 @@
 #!/bin/bash
 
 echo "Git update"
-git pull origin Ð´Ðlab2
+git pull origin lab2_meson
 
 echo "CMake build"
-rm -f test_runner *.o
-make
+rm -rf build
+meson setup build
+meson compile -C build
 
 echo "Execution"
-./test_runner
+./build/test_runner
