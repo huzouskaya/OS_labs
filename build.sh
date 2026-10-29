@@ -4,7 +4,7 @@ echo "Git update"
 git pull origin lab2_meson
 
 echo "CMake build"
-rm -f build
+rm -rf build
 meson setup build
 meson compile -C build
 
