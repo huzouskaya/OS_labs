@@ -5,7 +5,7 @@ int main() {
 	ProcessHandle handle;
 	int exit_code;
 
-#ifndef _WIN32
+#ifdef _WIN32
 	const char *prog = "ping";
 	const char *args = "-n 3 127.0.0.1";
 #else

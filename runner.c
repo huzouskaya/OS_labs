@@ -45,7 +45,7 @@ int bck_run(const char *program, const char *args, ProcessHandle *handle) {
 		exit(127);
 	}
 
-	*handle - pid;
+	*handle = pid;
 	return 0;
 }
 
