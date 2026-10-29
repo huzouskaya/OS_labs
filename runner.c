@@ -7,7 +7,7 @@
 int bck_run(const char *program, const char *args, ProcessHandle *handle){
 	STARTUPINFOA si;
 	ZeroMemory(&si, sizeof(si));
-	si.cd = sizeof(si);
+	si.cb = sizeof(si);
 
 	char cmd[1024];
 	snprintf(cmd, sizeof(cmd), "%s %s", program, args);

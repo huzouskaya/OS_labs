@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 echo Git Update
-git pull щorigin lab2
+git pull origin lab2
 
 echo Make
 del /Q test_runner.exe *.o 2>nul
