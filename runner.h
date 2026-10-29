@@ -6,7 +6,7 @@
 	typedef PROCESS_INFORMATION ProcessHandle;
 #else
 	#include <sys/types.h>
-	tupedef pid_t ProcessHandle;
+	typedef pid_t ProcessHandle;
 #endif
 
 int bck_run(const char *program, const char *args, ProcessHandle *handle);
