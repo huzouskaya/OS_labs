@@ -1,11 +1,11 @@
 #!/bin/bash
 
 echo "Git update"
-git pull origin main
+git pull origin Ð´Ðlab2
 
 echo "CMake build"
-rm -f hello hello.o
+rm -f test_runner *.o
 make
 
 echo "Execution"
-./hello
+./test_runner
