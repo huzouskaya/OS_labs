@@ -29,7 +29,11 @@ void posix_signal_handler(int sig) {
 }
 #endif
 
-typedef struct { int32_t counter; int32_t initialized; } shared_data_t;
+typedef struct { 
+    int32_t counter; 
+    int32_t initialized;
+    int32_t master_pid;
+} shared_data_t;
 
 void init_shared_memory(os_shm_t* shm, os_mutex_t* mutex) {
     shared_data_t* data = (shared_data_t*)os_shm_get_ptr(shm);
@@ -77,14 +81,22 @@ int main(int argc, char* argv[]) {
     init_shared_memory(shm, mutex);
 
     int is_master = 0;
+    int32_t my_pid = os_get_pid();
+
     if (role == 0) {
-        is_master = os_mutex_trylock(mutex);
-        if (is_master) {
-            printf("[MASTER] стал мастером\n");
-            os_mutex_unlock(mutex);
+        os_mutex_lock(mutex);
+        
+        int32_t current_master = ((shared_data_t*)os_shm_get_ptr(shm))->master_pid;
+        
+        if (current_master == 0 || !os_is_process_alive(current_master)) {
+            ((shared_data_t*)os_shm_get_ptr(shm))->master_pid = my_pid;
+            is_master = 1;
+            printf("[MASTER] стал мастером (PID: %d)!\n", my_pid);
         } else {
             printf("[SLAVE] мьютекс занят\n");
         }
+        
+        os_mutex_unlock(mutex);
     }
 
     if (role == 1) {
@@ -156,6 +168,10 @@ int main(int argc, char* argv[]) {
 
     if (is_master) {
         printf("[MAIN] Очистка ресурсов Мастера...\n");
+        os_mutex_lock(mutex);
+        ((shared_data_t*)os_shm_get_ptr(shm))->master_pid = 0;
+        os_mutex_unlock(mutex);
+
         os_mutex_destroy(mutex);
         os_mutex_unlink(MUTEX_NAME);
         os_shm_detach(shm);

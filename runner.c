@@ -3,7 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct { int32_t counter; int32_t initialized; } shared_data_t;
+typedef struct { 
+    int32_t counter; 
+    int32_t initialized;
+    int32_t master_pid;
+} shared_data_t;
+
 #define LOG_FILE "lab1_log.txt"
 
 void* timer_thread_func(void* arg) {
