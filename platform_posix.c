@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <pthread.h>
 #include <sys/select.h>
+#include <sys/time.h> 
 
 FILE* os_fopen_shared(const char* path, const char* mode) {
     return fopen(path, mode);
@@ -52,7 +53,11 @@ void os_shm_unlink(const char* name) { shm_unlink(name); }
 int32_t os_get_pid(void) { return (int32_t)getpid(); }
 int os_get_executable_path(char* buf, size_t buf_size) {
     ssize_t len = readlink("/proc/self/exe", buf, buf_size - 1);
-    if (len == -1) return -1; buf[len] = '\0'; return 0;
+    if (len == -1) {
+        return -1;
+    }
+    buf[len] = '\0';
+    return 0;
 }
 int32_t os_spawn_process(const char* app_path, const char* args[]) {
     pid_t pid = fork();
@@ -79,6 +84,7 @@ int os_cli_has_input(void) {
     FD_ZERO(&fds); FD_SET(STDIN_FILENO, &fds);
     return select(STDIN_FILENO + 1, &fds, NULL, NULL, &tv) > 0 ? 1 : 0;
 }
+
 int os_cli_read_line(char* buf, size_t buf_size) {
     if (fgets(buf, buf_size, stdin) == NULL) return 0;
     size_t len = strlen(buf);
