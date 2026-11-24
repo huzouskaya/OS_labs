@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include <sys/select.h>
 #include <sys/time.h> 
+#include <errno.h>
 
 FILE* os_fopen_shared(const char* path, const char* mode) {
     return fopen(path, mode);
