@@ -56,7 +56,7 @@ int32_t os_spawn_process(const char* app_path, const char* args[]) {
     PROCESS_INFORMATION pi = {0};
     
     if (CreateProcessA(app_path, cmd_line, NULL, NULL, FALSE, 
-                        CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
+                        CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
         CloseHandle(pi.hThread); 
         CloseHandle(pi.hProcess);
         return (int32_t)pi.dwProcessId;
