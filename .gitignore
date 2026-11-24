@@ -3,3 +3,4 @@ test_runner
 *.o
 *.exe
 build/
+lab1_log.txt

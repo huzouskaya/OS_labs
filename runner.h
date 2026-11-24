@@ -1,15 +1,18 @@
 #ifndef RUNNER_H
 #define RUNNER_H
+#include "platform.h"
 
-#ifdef _WIN32
-	#include <windows.h>
-	typedef PROCESS_INFORMATION ProcessHandle;
-#else
-	#include <sys/types.h>
-	typedef pid_t ProcessHandle;
-#endif
+typedef struct {
+    os_shm_t* shm;
+    os_mutex_t* mutex;
+    int is_master;
+    volatile int running;
+} runner_context_t;
 
-int bck_run(const char *program, const char *args, ProcessHandle *handle);
-int proc_wait(ProcessHandle *handle, int *exit_code);
-
+void* timer_thread_func(void* arg);
+void* logger_thread_func(void* arg);
+void* slave1_thread_func(void* arg);
+void* slave2_thread_func(void* arg); 
+void* spawner_thread_func(void* arg);
+void* cli_thread_func(void* arg);
 #endif
