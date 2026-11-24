@@ -20,8 +20,24 @@ FILE* os_fopen_shared(const char* path, const char* mode) {
 struct os_mutex { sem_t* sem; };
 os_mutex_t* os_mutex_create(const char* name) {
     os_mutex_t* m = malloc(sizeof(os_mutex_t));
-    m->sem = sem_open(name, O_CREAT | O_RDWR, 0666, 1);
-    return (m->sem == SEM_FAILED) ? (free(m), NULL) : m;
+    if (!m) return NULL;
+    
+    m->sem = sem_open(name, O_CREAT | O_EXCL | O_RDWR, 0666, 1);
+    
+    if (m->sem == SEM_FAILED) {
+        if (errno == EEXIST) {
+            m->sem = sem_open(name, O_RDWR, 0666);
+            if (m->sem == SEM_FAILED) {
+                free(m);
+                return NULL;
+            }
+        } else {
+            free(m);
+            return NULL;
+        }
+    }
+    
+    return m;
 }
 void os_mutex_lock(os_mutex_t* m) { sem_wait(m->sem); }
 int os_mutex_trylock(os_mutex_t* m) { return sem_trywait(m->sem) == 0 ? 1 : 0; }
